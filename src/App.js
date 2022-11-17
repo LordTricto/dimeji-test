@@ -1,13 +1,19 @@
 import './App.css';
 
 import AppRouter from './routes/AppRouter';
+import Bag from './components/bag/Bag';
 import Nav from './components/nav/nav';
+import { useSelector } from "react-redux";
 
 function App() {
+  const isCartOpen = useSelector((state) => state.cart.isCartOpen);
   return (
-    <div className="bg-white-dark w-full min-h-screen">
+    <div className="app__container">
       <Nav />
-      <AppRouter />;
+      <main className="app__main">
+        {isCartOpen && <Bag />}
+        <AppRouter />
+      </main>
     </div>
   );
 }
