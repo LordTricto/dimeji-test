@@ -13,10 +13,8 @@ function Category() {
     if (data && data) {
       setProductList(data.categories[0].products);
     }
-    console.log(data && data)
   }, [data])
-  // console.log(loading)
-  // console.log(error)
+
   return (
     <div className='items__container'>
       <span className='items__header'>
@@ -24,8 +22,8 @@ function Category() {
       </span>
       <div className='items__list'>
         {
-          productList && productList.map(_product => (
-            <ItemCard data={_product} isDisabled={_product.inStock} />
+          productList && productList.map((_product, index) => (
+            <ItemCard key={index} data={_product} isDisabled={!_product.inStock} />
           ))
         }
         <ItemCard isDisabled />

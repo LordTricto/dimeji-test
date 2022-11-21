@@ -16,6 +16,7 @@ import { useQuery } from '@apollo/client'
 function Nav() {
     const dispatch = useDispatch()
     const isCartOpen = useSelector((state) => state.cart.isCartOpen);
+    const cart = useSelector((state) => state.cart.cart);
     const currencyList = useSelector((state) => state.currency.currencyList);
     const currentCurrency = useSelector((state) => state.currency.currentCurrency);
     const { error, loading, data } = useQuery(LOAD_CURRENCIES)
@@ -55,7 +56,7 @@ function Nav() {
         },
         [dispatch],
     )
-    // console.log(currencyList)
+
     return (
         <div className={`nav__container`}>
             {/* <div className={`nav__container ${isCartOpen ? "--fullScreen" : ""}`}> */}
@@ -78,8 +79,8 @@ function Nav() {
                     <DropdownHead
                         value={<span>{currentCurrency && currentCurrency.symbol}</span>}
                     >
-                        {currentCurrency && currencyList && currencyList.length > 0 && currencyList.map(_currency => (
-                            <DropdownItem active={currentCurrency.symbol === _currency.symbol} onClick={() => handleSelectCurrency(_currency)} >
+                        {currentCurrency && currencyList && currencyList.length > 0 && currencyList.map((_currency, index) => (
+                            <DropdownItem key={index} active={currentCurrency.symbol === _currency.symbol} onClick={() => handleSelectCurrency(_currency)} >
                                 {_currency.symbol}
                                 <span className={`nav__dropdown --item ${_currency.label === "AUD" ? "--extraSpace" : ""} `}>
                                     {_currency.label}
@@ -88,7 +89,7 @@ function Nav() {
                         ))}
                     </DropdownHead>
                 </div>
-                <div className='cart-icon badge' data-badge={2} onClick={handleToggleCart} >
+                <div className='cart-icon badge' data-badge={!!(cart?.length) ? cart?.length : null} onClick={handleToggleCart} >
                     <CartIcon />
                 </div>
             </div>

@@ -1,18 +1,17 @@
 import './styles.css';
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as CartHoverIcon } from '../../assets/svg/itemCart.svg'
-import ImageTest from "../../assets/images/Product.png";
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { addItem } from '../../redux/cart/cartSlice';
 
 function ItemCard({ data, isDisabled = false }) {
-    const [isHover, setIsHover] = useState(false);
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
 
     const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
+    const [isHover, setIsHover] = useState(false);
     const [dataCurrency, setDataCurrency] = useState(null);
 
     useEffect(() => {
@@ -20,27 +19,20 @@ function ItemCard({ data, isDisabled = false }) {
             setDataCurrency(
                 data.prices.find(_price => _price.currency?.label === currentCurrency?.label)
             )
-            console.log(data.prices,
-                currentCurrency?.label
-            );
         }
     }, [data, currentCurrency])
 
-
     const handleSelectItem = useCallback(
         () => {
-            // navigate("/individual")
+            dispatch(addItem(data))
         },
-        [
-            // navigate
-        ],
+        [data, dispatch],
     )
 
     return (
         <>
             {data &&
-                <div className={`item__container ${isHover && !isDisabled ? "--hover" : ""} ${isDisabled ? "--disabled" : ""} `}
-                    onClick={handleSelectItem}
+                <div key={data && data.id} className={`item__container ${isHover && !isDisabled ? "--hover" : ""} ${isDisabled ? "--disabled" : ""} `}
                     onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
                     <div className='item__img'>
                         <img src={data.gallery[0]} alt="hhh" />
@@ -53,7 +45,7 @@ function ItemCard({ data, isDisabled = false }) {
                         }
                     </div>
                     <div className='item__texts'>
-                        <div className={`item__cart ${isHover && !isDisabled ? "--hover" : ""}`}>
+                        <div className={`item__cart ${isHover && !isDisabled ? "--hover" : ""}`} onClick={() => handleSelectItem()}>
                             <CartHoverIcon />
                         </div>
                         <p className='item__name'>{data.name}</p>

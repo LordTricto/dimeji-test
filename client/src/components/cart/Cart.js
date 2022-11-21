@@ -3,23 +3,22 @@ import './styles.css';
 import Button from '../button/button'
 import CartItem from '../cartItem/cartItem'
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 function Cart() {
+    const cart = useSelector((state) => state.cart.cart);
+
     return (
         <>
             <div className='cart__container'>
                 <span className='--textExtraLarge --extrabold'>Cart</span>
                 <div className='cart__body'>
                     <div className='cart__items'>
-                        <div className='cart__item'>
-                            <CartItem />
-                        </div>
-                        <div className='cart__item'>
-                            <CartItem />
-                        </div>
-                        <div className='cart__item'>
-                            <CartItem />
-                        </div>
+                        {cart.map((_item, index) => (
+                            <div className='cart__item' key={index} >
+                                <CartItem item={_item} />
+                            </div>
+                        ))}
                     </div>
                     <div className='cart__footer'>
                         <div className='cart__details'>

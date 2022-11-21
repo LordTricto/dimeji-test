@@ -35,7 +35,7 @@ root.render(
       <Provider store={store}>
         <ApolloProvider client={client}>
           <App />
-        </ApolloProvider>,
+        </ApolloProvider>
       </Provider>
     </Router>
   </React.StrictMode>

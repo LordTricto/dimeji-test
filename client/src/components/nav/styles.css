@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 1.5rem 6.3125rem 0 6.3125rem;
+    height: 80px;
     position: relative;
     width: 100%;
 }
