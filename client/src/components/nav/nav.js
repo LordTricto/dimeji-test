@@ -1,6 +1,7 @@
 import './styles.css';
 
-import React, { useCallback, useEffect, useState } from 'react'
+import { LOAD_CATEGORIES, LOAD_CURRENCIES } from '../../services/queries';
+import React, { useCallback, useEffect, useState } from 'react';
 import { closeCart, openCart } from '../../redux/cart/cartSlice';
 import { setCurrencyList, setSelectedCurrency } from '../../redux/currency/currencySlice';
 import { useDispatch, useSelector } from "react-redux";
@@ -8,32 +9,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as CartIcon } from '../../assets/svg/cart.svg';
 import DropdownHead from '../dropdown/dropdown';
 import DropdownItem from '../dropdown/dropdownItem';
-import { LOAD_CURRENCIES } from '../../services/queries';
-// import { LOAD_CURRENCIES } from '../services/queries';
-import { ReactComponent as LogoIcon } from '../../assets/svg/logo.svg'
-import { useQuery } from '@apollo/client'
+import { Link } from 'react-router-dom';
+import { ReactComponent as LogoIcon } from '../../assets/svg/logo.svg';
+import { setProducts } from '../../redux/products/productsSlice';
+import { useQuery } from '@apollo/client';
 
 function Nav() {
     const dispatch = useDispatch()
+
     const isCartOpen = useSelector((state) => state.cart.isCartOpen);
     const cart = useSelector((state) => state.cart.cart);
     const currencyList = useSelector((state) => state.currency.currencyList);
     const currentCurrency = useSelector((state) => state.currency.currentCurrency);
-    const { error, loading, data } = useQuery(LOAD_CURRENCIES)
-    // const [isCartOpen, setIsCartOpen] = useState(true);
-    // const [currencyList, setCurrencyList] = useState([]);
-    // const [currentCurrency, setSelectedCurrency] = useState({
-    //     label: "USD",
-    //     symbol: "$"
-    // });
+    const productsWithCategories = useSelector((state) => state.product.productsWithCategories);
+    const { data: currencyData } = useQuery(LOAD_CURRENCIES)
+    const { data: categoriesData } = useQuery(LOAD_CATEGORIES)
+    const [currentCategory, setCurrentCategory] = useState("all")
 
     useEffect(() => {
-        if (data && data.currencies) {
+        if (currencyData && currencyData.currencies) {
             dispatch(
-                setCurrencyList(data.currencies)
+                setCurrencyList(currencyData.currencies)
             )
         }
-    }, [data, dispatch])
+    }, [currencyData, dispatch])
+
+    const handleSelectCategory = useCallback(
+        (_category) => {
+
+            if (!productsWithCategories) return;
+            const categoryProducts = productsWithCategories.find(_productCategory => _productCategory.name === _category);
+            if (categoryProducts) {
+                dispatch(setProducts(categoryProducts.products))
+            }
+            setCurrentCategory(_category)
+        },
+        [dispatch, productsWithCategories],
+    )
 
     const handleToggleCart = useCallback(
         () => {
@@ -59,17 +71,14 @@ function Nav() {
 
     return (
         <div className={`nav__container`}>
-            {/* <div className={`nav__container ${isCartOpen ? "--fullScreen" : ""}`}> */}
             <div className='nav__left'>
-                <div className='nav__left--item --active'>
-                    <span className='nav__left--text --active'>All</span>
-                </div>
-                <div className='nav__left--item'>
-                    <span className='nav__left--text'>Clothes</span>
-                </div>
-                <div className='nav__left--item'>
-                    <span className='nav__left--text'>Tech</span>
-                </div>
+                {categoriesData && categoriesData.categories.map((_category, index) => (
+                    <Link to={`/${_category.name}`} key={index} >
+                        <div className={`nav__left--item ${currentCategory === _category.name ? "--active" : ""} `} onClick={() => handleSelectCategory(_category.name)}>
+                            <span className={`nav__left--text ${currentCategory === _category.name ? "--active" : ""} `}>{_category.name}</span>
+                        </div>
+                    </Link>
+                ))}
             </div>
             <div className='nav__center'>
                 <LogoIcon />
@@ -93,11 +102,7 @@ function Nav() {
                     <CartIcon />
                 </div>
             </div>
-            {/* {
-                isCartOpen &&
-                <Cart />
-            } */}
-        </div>
+        </div >
     )
 }
 

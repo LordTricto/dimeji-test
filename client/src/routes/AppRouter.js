@@ -10,7 +10,8 @@ function AppRouter() {
         <>
             <Routes>
                 <Route path="/" element={<Category />} />
-                <Route path="/individual" element={<Product />} />
+                <Route path="/:categoryName" element={<Category />} />
+                <Route path="/product/:productId" element={<Product />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes></>

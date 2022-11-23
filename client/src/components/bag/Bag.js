@@ -49,7 +49,7 @@ function Bag() {
                             <span className="bag__text">{" "} {cart.length} items</span>
                         </div>
                         {cart.map((_item, index) => (
-                            <CartItem item={_item} key={index} />
+                            <CartItem isBag item={_item} key={index} />
                         ))}
                         <div className="bag__footer">
                             <span className="--bold">Total</span>

@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as CartHoverIcon } from '../../assets/svg/itemCart.svg'
 import { addItem } from '../../redux/cart/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 function ItemCard({ data, isDisabled = false }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
@@ -32,7 +34,12 @@ function ItemCard({ data, isDisabled = false }) {
     return (
         <>
             {data &&
-                <div key={data && data.id} className={`item__container ${isHover && !isDisabled ? "--hover" : ""} ${isDisabled ? "--disabled" : ""} `}
+                <div key={data && data.id} className={`item__container ${isHover && !isDisabled ? "--hover" : ""} ${isDisabled ? "--disabled" : ""} `} onClick={() => {
+
+
+                    console.log("first")
+                    navigate(`/product/${data && data.id}`)
+                }}
                     onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
                     <div className='item__img'>
                         <img src={data.gallery[0]} alt="hhh" />

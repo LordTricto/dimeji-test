@@ -5,13 +5,13 @@ import { decreaseItemQuantity, increaseItemQuantity } from '../../redux/cart/car
 import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../button/button';
+import Carousel from '../carousel/carousel';
 import ColorButton from '../colorButton/colorButton';
-import ImageTest from "../../assets/images/Product.png";
 import { ReactComponent as MinusIcon } from '../../assets/svg/minus.svg'
 import { ReactComponent as PlusIcon } from '../../assets/svg/plus.svg'
 import SizeButton from '../sizeButton/sizeButton';
 
-function CartItem({ item }) {
+function CartItem({ isBag = false, item }) {
     const dispatch = useDispatch();
     const currentCurrency = useSelector((state) => state.currency.currentCurrency);
     const [itemCurrency, setItemCurrency] = useState(null);
@@ -88,7 +88,8 @@ function CartItem({ item }) {
                             </div>
                         </div>
                         <div className="cartItem__img">
-                            <img src={item.gallery[0]} alt="hhh" />
+                            {isBag && <img src={item.gallery[0]} alt="hhh" />}
+                            {!isBag && <Carousel slides={item.gallery} />}
                         </div>
                     </div>
                 </div>

@@ -23,14 +23,18 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    cursor: pointer;
+    z-index: 1;
 }
 
 .nav__left--item span {
+    text-transform: capitalize;
     color: #1D1F22;
 }
 
 .nav__left--item.--active span {
     color: #5ECE7B;
+    cursor: default;
 }
 
 .nav__left--item.--active::after {

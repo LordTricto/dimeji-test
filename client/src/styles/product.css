@@ -23,6 +23,7 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 2rem;
+    cursor: pointer;
 }
 
 .productPage__imgs--list img {
